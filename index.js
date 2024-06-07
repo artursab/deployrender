@@ -4,8 +4,8 @@ const app = express();
 const cors = require('cors');
 
 const protocol = 'http';
-const host = 'example.com';
-const port = 80;
+const host = process.env.HOST || '0.0.0.0'; // Use '0.0.0.0' for binding to all interfaces
+const port = process.env.PORT || 3001;
 const baseUrl = `${protocol}://${host}:${port}/api/persons`;
 
 app.use(cors());
@@ -108,7 +108,6 @@ app.post('/api/persons', (request, response) => {
   response.json(person);
 });
 
-const PORT = process.env.PORT || port;
-app.listen(PORT, host, () => {
-  console.log(`Server running at ${protocol}://${host}:${PORT}`);
+app.listen(port, host, () => {
+  console.log(`Server running at ${protocol}://${host}:${port}`);
 });
