@@ -1,16 +1,14 @@
 const express = require('express');
 const morgan = require('morgan');
 const app = express();
-const cors = require('cors')
+const cors = require('cors');
 
-const baseUrl = 'http://localhost:3001/api/persons'
+const protocol = 'http';
+const host = 'example.com';
+const port = 80;
+const baseUrl = `${protocol}://${host}:${port}/api/persons`;
 
-protocol: http
-host: example.com
-port: 80
-
-
-app.use(cors())
+app.use(cors());
 app.use(morgan('tiny'));
 app.use(express.json());
 
@@ -110,7 +108,7 @@ app.post('/api/persons', (request, response) => {
   response.json(person);
 });
 
-const PORT = process.env.PORT || 3001
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+const PORT = process.env.PORT || port;
+app.listen(PORT, host, () => {
+  console.log(`Server running at ${protocol}://${host}:${PORT}`);
 });
