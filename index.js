@@ -100,7 +100,7 @@ app.post('/api/persons', (request, response) => {
 
 // The "catchall" handler: for any request that doesn't match one above, send back React's index.html file.
 app.get('*', (request, response) => {
-  response.sendFile(path.join(__dirname, 'src/build', 'App.jsx'));
+  response.sendFile(path.join(__dirname, 'src', 'App.jsx'));
 });
 
 app.listen(port, host, () => {
