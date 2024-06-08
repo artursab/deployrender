@@ -1,16 +1,20 @@
 const express = require('express');
 const morgan = require('morgan');
+const path = require('path');
 const app = express();
 const cors = require('cors');
 
 const protocol = 'http';
-const host = process.env.HOST || '0.0.0.0'; // Use '0.0.0.0' for binding to all interfaces
+const host = process.env.HOST || '0.0.0.0';
 const port = process.env.PORT || 3001;
 const baseUrl = `${protocol}://${host}:${port}/api/persons`;
 
 app.use(cors());
 app.use(morgan('tiny'));
 app.use(express.json());
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, 'src/build')));
 
 let persons = [
   { 
@@ -34,20 +38,6 @@ let persons = [
     "number": "39-23-6423122"
   }
 ];
-
-app.get('/', (request, response) => {
-  response.send('<h1>Hello World!</h1>');
-});
-
-app.get('/info', (request, response) => {
-  const currentTime = new Date();
-  const entryCount = persons.length;
-  
-  response.send(`
-    <p>Phonebook has info for ${entryCount} people</p>
-    <p>${currentTime}</p>
-  `);
-});
 
 app.get('/api/persons', (request, response) => {
   response.json(persons);
@@ -106,6 +96,11 @@ app.post('/api/persons', (request, response) => {
   persons = persons.concat(person);
 
   response.json(person);
+});
+
+// The "catchall" handler: for any request that doesn't match one above, send back React's index.html file.
+app.get('*', (request, response) => {
+  response.sendFile(path.join(__dirname, 'src/build', 'App.jsx'));
 });
 
 app.listen(port, host, () => {
